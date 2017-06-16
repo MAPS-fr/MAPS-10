@@ -41,17 +41,17 @@ medFood3resume <- select(repli10, "10" = medFood3 ) %>%
 
 colnames(medFood1resume) <- sub(pattern="X", replacement="", x=colnames(medFood1resume))
 
-pdf("medFood1.pdf")
+svg("medFood1.svg")
 boxplot(medFood1resume,data=medFood1resume, main="Médiane sur l'objectif food1 sur 100 séries de réplications",
         xlab="Nombre de réplications par série", ylab="Objectif medianFood1") 
 dev.off()
 
-pdf("medFood2.pdf")
+svg("medFood2.svg")
 boxplot(medFood2resume,data=medFood2resume, main="Médiane sur l'objectif food2 sur 100 séries de réplications",
         xlab="Nombre de réplications par série", ylab="Objectif medianFood2") 
 dev.off()
 
-pdf("medFood3.pdf")
+svg("medFood3.svg")
 boxplot(medFood3resume,data=medFood3resume, main="Médiane sur l'objectif food2 sur 100 séries de réplications",
         xlab="Nombre de réplications par série", ylab="Objectif medianFood3") 
 dev.off()
