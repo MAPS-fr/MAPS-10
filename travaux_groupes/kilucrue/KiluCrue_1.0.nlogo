@@ -4,7 +4,7 @@ extensions
   gis ;add extension to import/export the "mnt" as a raster file.
 ]
 
-;create a turtles classe named buildinds/antennas/rescues/telecoms and a link classe named roads
+;create a turtles classe named buildings/antennas/rescues/telecoms and a link classe named roads
 breed [buildings building]
 breed [antennas antenna]
 breed [rescues rescue]
@@ -20,7 +20,7 @@ patches-own ; define patches atributs
   active_antenna ; no = 0 / yes = 1
 ]
 
-antennas-own ; define antennas atributs
+antennas-own ; define antennas attributs
 [
   active ; no = 0 / yes = 1
   antenna_priority ; from 1 to 3 // not used in this version of the model
@@ -33,20 +33,20 @@ buildings-own ; define building atributs
   zcor ; elevation
 ]
 
-rescues-own ; define rescue atributs
+rescues-own ; define rescue attributs
 [
-  location ; coordonate of the patch where i am
-  com ; no = 0 (no antenna active at my locatio) / yes = 1
-  cible ; coordonate of the patch where i should go
-  mission ; count the total of mission realized
+  location ; coordinates of the patch where I am
+  com ; no = 0 (no active antenna at my location) / yes = 1
+  cible ; coordinate of the patch where I should go
+  mission ; count the total of realized missions
 ]
 
 telecoms-own ; define telecoms atributs
 [
-  location ; coordonate of the patch where i am
-  com ; no = 0 (no antenna active at my locatio) / yes = 1
-  cible ; coordonate of the patch where i should go
-  mission ; count the total of mission realized
+  location ; coordinates of the patch where I am
+  com ; no = 0 (no active antenna at my location) / yes = 1
+  cible ; coordinate of the patch where I should go
+  mission ; count the total of realized missions
 ]
 
 
@@ -54,26 +54,26 @@ globals ; define global variables
 [
   x_river ; position of the river (edge or middle)
   width_river ; width of the river
-  hill_radius ; radius usded to create hills
+  hill_radius ; radius used to create hills
   grid ; space between each building in the city
-  nbr_diff ; number of repetition of the function "diffuse"
+  nbr_diff ; number of repetitions of the function "diffuse"
   z_diff ; % used for the function "diffuse" for the land creation
-  water_height ; varible used to represent the water height during the simulation
+  water_height ; variable used to represent the water height during the simulation
   max_water_height ; maximum elevation of water height
-  water_rize ; define how much water height rize on one tick
+  water_rise ; define how much water height rise on one tick
   mnt ; name of the raster file exported/imported
-  listbat ; list of the building to saved => used by the rescues to select a cible
-  listantenna ; list of the antenna to saved => used by the telecoms to select a cible
-  stop_flood ; siwtch
-  end_sim ; siwtch
-  pop_total ; result that gives the population totale
-  pop_flood ; result that gives the flooding population
-  pop_saved ; result that gives the population saved
-  flooding ; result that gives the max % of the city touched by the flooding event
+  listbat ; list of the buildings to saved => used by the rescues to select a cible
+  listantenna ; list of the antennas to saved => used by the telecoms to select a cible
+  stop_flood ; switch
+  end_sim ; switch
+  pop_total ; result that gives the population total
+  pop_flood ; result that gives the flooded population
+  pop_saved ; result that gives the saved population
+  flooding ; result that gives the max % of the city affected by the flood
   time_end ; result that record the final number of ticks
 ]
 
-to set_globals ; gives values to gobal vaiables
+to set_globals ; gives values to gobal variables
   ifelse river_location = "edge"
   [
     set x_river 0 ; river on the left edge
@@ -94,25 +94,25 @@ to set_globals ; gives values to gobal vaiables
   set pop_total 0
 end
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; List of function to set color or shape ;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; List of functions to set color or shape ;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-to set_color_ground ; function to set color to patchs
+to set_color_ground ; function to set color to patches
   ask patches with[ground = "river"]
   [
     set pcolor blue
   ]
 end
 
-to set_color_flood ; function to set color to patchs if they are flooding
+to set_color_flood ; function to set color to patches if they are flooded
   ask patches with[flood = 1]
   [
     set pcolor blue
   ]
 end
 
-to set_color_mnt ; function to set color to patchs according to their elevation
+to set_color_mnt ; function to set color to patches according to their elevation
   ask patches
   [
     set pcolor scale-color brown pzcor (z_max + 5) z_river ; set color to the elevation
@@ -199,7 +199,7 @@ to change_icone_antenna_2 ; function to change shape of telecoms when they move 
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;; functions calls by the buttoms ;;;;;;
+;;;;; functions calls by the buttons ;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to setup ; setup general
@@ -228,7 +228,7 @@ go_rescue ; function to move the rescues teams
 go_telecom ; function to move the telecoms teams
 go_flood ; function to make flooding
 unflood ; function to solve unflodding
-if pop_flood = 0 and end_sim = "on" ; test if the simulation ends
+if pop_flood = 0 and end_sim = "on" ; test if the simulation is over
 [
 set time_end ticks
 stop
@@ -252,12 +252,12 @@ end
 to show_mission ; Function to display the number of missions realized by each team
   ask rescues
   [
-    set size mission ; set size of rescue proportional to the number of mission realized
+    set size mission ; set size of rescue proportional to the number of missions realized
     set label mission
   ]
     ask telecoms
   [
-    set size mission * 2 ; set size of telecom proportional to the number of mission realized
+    set size mission * 2 ; set size of telecom proportional to the number of missions realized
     set label mission
   ]
 end
@@ -330,7 +330,7 @@ to create-antenna ; Function to create antenna
   [
   if (pxcor = width_river + 1 or (pxcor mod 30 = 0 and pxcor != 0)) and pycor mod 30 = 0 and pycor != 0 and pycor != 100 ; place antenna on a regular grid
     [
-      sprout-antennas 1 ; create one antenna on each nod selected
+      sprout-antennas 1 ; create one antenna on each node selected
       [
         set shape "target"
         set active 1
@@ -380,10 +380,10 @@ to set_rescue ; function to create rescues teams
         set mission 0
         ifelse set_location = "uncentralized"
         [
-          set location one-of buildings with [zcor > z_city] ; teams placed on random building with elevation > of the mean city elevation
+          set location one-of buildings with [zcor > z_city] ; teams placed on random buildings with elevation > of the mean city elevation
         ]
         [
-          set location one-of buildings with [xcor > x_river + 40 and xcor < x_river + 50 and ycor = 50] ; team placed on one building distant of 40 m for the river
+          set location one-of buildings with [xcor > x_river + 40 and xcor < x_river + 50 and ycor = 50] ; team placed on one building where the distance is between 40m and 50m from the river
         ]
         move-to location
       ]
@@ -412,32 +412,32 @@ to set_telecom ; function to create telecoms teams
     ]
 end
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;; functions to define and run the flooding event ;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; functions to define and run the flood ;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-to set_flood   ;  Define max_water_height and water rize for each return period
+to set_flood   ;  Define max_water_height and water rise for each return period
   if return_period = 10
   [
     set max_water_height z_river + 3
-    set water_rize 0.02
+    set water_rise 0.02
   ]
   if return_period = 50
   [
     set max_water_height z_river + 4
-    set water_rize 0.05
+    set water_rise 0.05
   ]
   if return_period = 100
   [
     set max_water_height z_river + 6
-    set water_rize 0.1
+    set water_rise 0.1
   ]
 end
 
-to go_flood ; Function to run the flooding event
+to go_flood ; Function to run the flood
   ifelse water_height < max_water_height
   [
-   set water_height water_height + water_rize ; makes water rize
+   set water_height water_height + water_rise ; makes water rise
    ask patches with [flood = 1]
     [
       ask neighbors with [pzcor < water_height] ; test witch patches may flood
@@ -460,7 +460,7 @@ to go_flood ; Function to run the flooding event
         [
           set safe 0
           set listbat fput self listbat ; add building to the list of buildings to be saved
-          set pop_flood pop_flood + nbr_pop ; count the population touched by the flooding
+          set pop_flood pop_flood + nbr_pop ; count the population affected by the flood
           set_color_building
         ]
       ]
@@ -478,15 +478,15 @@ to unflood ; function to run the dicrease of water
   [
     if water_height > z_river ; test if water is still above it's normal elevation
     [
-      set water_height (water_height - water_rize)
-      ask patches with [flood = 1 and pzcor > water_height] ; test if patches ar unflood
+      set water_height (water_height - water_rise)
+      ask patches with [flood = 1 and pzcor > water_height] ; test if patches are unflood
     [
         set flood 0
     ]
       set_color_mnt
       set_color_flood
     ]
-    set end_sim "on" ; if water height is equal to the river elevation, allows to end simulation
+    set end_sim "on" ; if water height is equal to the river elevation, allows to stop the simulation
   ]
 end
 
@@ -499,7 +499,7 @@ to go_rescue ; Function to run the rescue teams
   [
    ifelse cible = 0 ; test if the rescue already has a cible
      [
-      ifelse ([active_antenna] of patch-here) > 0 ; test if the recsue has communication
+      ifelse ([active_antenna] of patch-here) > 0 ; test if the rescue has communication
        [
         choice_cible_rescue ; if the rescue doesn't have cible but has communication, select a cible
        ]
@@ -568,7 +568,7 @@ to move_random ; Function to move randomly a team to one of his neighbors
   set location new-location-c
 end
 
-to move_cible_rescue ; Function to mode a rescue to his cible
+to move_cible_rescue ; Function to move a rescue towards its target
   ifelse (any? neighbors = cible or location = cible) ; test if my cible if not here or one of my direct neighbors
   [
     move-to cible ; if yes, move to the cible
@@ -588,7 +588,7 @@ to move_cible_rescue ; Function to mode a rescue to his cible
   ]
 end
 
-to move_cible_telecom ; Function to mode a telecom to his cible
+to move_cible_telecom ; Function to move a telecom towards its target
   ifelse (any? neighbors = cible or location = cible) ; test if my cible if not here or one of my direct neighbors
   [
     move-to cible ; if yes, move to the cible
@@ -637,12 +637,12 @@ end
 ;;;;; functions to import/export a raster  file ;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-to export_mnt ; function to export pzcor attribut of all patches to a raster file
-  gis:set-world-envelope [0 101 0 101] ; set the wworld dimension
+to export_mnt ; function to export pzcor attributes of all patches to a raster file
+  gis:set-world-envelope [0 101 0 101] ; set the area dimension
   gis:store-dataset gis:patch-dataset pzcor "mnt.asc" ; export patches elevation as a "mnt"
 end
 
-to import_mnt ; function to set pzcor to a imported raster file selected in a list (list to be created by exporting mnt files and renaming it"
+to import_mnt ; function to set pzcor to an imported raster file selected in a list (list to be created by exporting mnt files and renaming it"
   if mnt_choice = 1
   [ set mnt gis:load-dataset "mnt1.asc"]
   if mnt_choice = 2
@@ -778,7 +778,7 @@ INPUTBOX
 210
 470
 nbr_hill
-3.0
+4.0
 1
 0
 Number
@@ -800,7 +800,7 @@ INPUTBOX
 307
 540
 z_max
-24.3734685318
+24.18230606389969
 1
 0
 Number
@@ -811,7 +811,7 @@ INPUTBOX
 462
 540
 z_city
-21.84125818902668
+21.859244874142266
 1
 0
 Number
@@ -1000,7 +1000,7 @@ CHOOSER
 city_type
 city_type
 "new_random" "existing_mnt"
-1
+0
 
 MONITOR
 1120
